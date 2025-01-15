@@ -1,0 +1,15 @@
+package com.project.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.project.model.Cart;
+
+import lombok.RequiredArgsConstructor;
+
+public interface CartService {
+	
+	 void addProductCart(int userId, int productId, int productCount, String productDescription, double shippingFee, double productPrice);
+	    List<Cart> findAll(int userId);
+}

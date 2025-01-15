@@ -1,0 +1,26 @@
+package com.project.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import com.project.model.Cart;
+
+@Mapper
+public interface LjmSemiMapper {
+	 @Insert("INSERT INTO bookinglist (user_id, product_id, product_count, product_description, shipping_fee, product_price, status) " +
+	            "VALUES (#{userId}, #{productId}, #{productCount}, #{productDescription}, #{shippingFee}, #{productPrice}, 'added')")
+	    void addcart(Cart cart);
+	    
+	    // 장바구니 목록을 조회하는 쿼리
+	    @Select("SELECT * FROM bookinglist WHERE user_id = #{userId} AND status = 'added'")
+	    List<Cart> findcart(int userId);
+	    
+	    // 장바구니 항목을 업데이트하는 쿼리
+	    @Update("UPDATE bookinglist SET product_count = #{productCount} WHERE user_id = #{userId} AND product_id = #{productId} AND status = 'added'")
+	    void updatecart(Cart cart);
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<%@ page contentType="text/html; charsert=UTF-8" pageEncoding="UTF-8" %>
+
+    <div class="booking">
+        <h2>Cart</h2>
+        <br/>
+        <table class="booking-table">
+                <tr>
+                    <th><input type="checkbox" id="all-check" onclick="allCheck()"/></th>
+                    <th>상품명</th>
+                    <th>상세설명</th>
+                    <th>배송비</th>
+                    <th>수량</th>
+                    <th>가격</th>
+                </tr>
+                    <tbody></tbody>
+                </table>
+                <div class="allprice" colspan="6">배송비 000 + 가격 0000 = 0000원</div>
+        <br/>
+        <br/>
+        <hr/>
+        <button class="orderbtn" id="order" type="submit" onclick="order()">주문하러가기</button>
+        <button class="orderbtn" id="delete" onclick="deleteSelected()">선택 삭제</button>
+    </div>

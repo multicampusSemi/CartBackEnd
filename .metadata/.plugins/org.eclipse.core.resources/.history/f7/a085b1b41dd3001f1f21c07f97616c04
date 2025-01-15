@@ -1,0 +1,32 @@
+package com.project.controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.project.model.Cart;
+import com.project.service.CartService;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+public class CartController {
+	private final CartService cartService;
+	
+	
+	@GetMapping("/cart/add")
+	public String addCart(Cart cart,Model model) {
+		cartService.addProductCart(cart);
+		return "redirect/booking";
+	}
+	
+	@GetMapping("/booking")
+	public String booking(Model model) {
+		List<Cart> cartItems = cartService.findAll();
+		model.addAttribute("cartItems",cartItems);
+		return "booking";
+	}
+}

@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<%@ page contentType="text/html; charsert=UTF-8" pageEncoding="UTF-8" %>
+
+    <div class="booking">
+        <h2>Cart</h2>
+        
+    </div>
