@@ -35,11 +35,15 @@
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.GetMapping"/>
     <fullyQualifiedTypeName name="org.springframework.ui.Model"/>
     <fullyQualifiedTypeName name="com.project.service.ProductsService"/>
-    <fullyQualifiedTypeName name="com.project.model.Products"/>
     <fullyQualifiedTypeName name="com.project.mapper.LjmSemiMapper"/>
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestMapping"/>
-    <fullyQualifiedTypeName name="org.springframework.context.annotation.ComponentScan"/>
     <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="org.apache.ibatis.annotations.Mapper"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Component"/>
+    <fullyQualifiedTypeName name="org.mybatis.spring.annotation.MapperScans"/>
     <fullyQualifiedTypeName name="org.mybatis.spring.annotation.MapperScan"/>
+    <fullyQualifiedTypeName name="org.springframework.context.annotation.ComponentScan"/>
+    <fullyQualifiedTypeName name="com.project.model.Products"/>
+    <fullyQualifiedTypeName name="com.project.model.BookingList"/>
+    <fullyQualifiedTypeName name="com.project.model.Orders"/>
 </qualifiedTypeNameHistroy>

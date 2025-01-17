@@ -1,0 +1,49 @@
+package com.project.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import com.project.mapper.LjmSemiMapper;
+import com.project.model.Orders;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+	private final LjmSemiMapper orderMapper;
+	
+	public void saveOrder(int userId, List<Orders> selectedProducts) {
+	    selectedProducts.forEach(bookingItem -> {
+	    	int shippingFee = bookingItem.getShippingFee();
+	        int quantity = bookingItem.getQuantity();
+	        int productPrice = bookingItem.getProductPrice();
+	        int totalAmount = productPrice * quantity;  // 직접 계산
+
+	        Orders order = new Orders();
+	        order.setProductName(bookingItem.getProductName());
+	        order.setQuantity(quantity);
+	        order.setProductPrice(productPrice);
+	        order.setShippingFee(shippingFee);  // ShippingFee 값 설정
+	        order.setTotalAmount(totalAmount);  // TotalAmount 값 설정
+
+	        orderMapper.insertOrder(userId, quantity, totalAmount, shippingFee);  // 매퍼 호출
+	    });
+	}
+	 public List<Orders> getOrders() {
+	        return orderMapper.getAllOrders();  // 예시로 getAllOrders 메서드 추가 필요
+	    }
+
+	    public int calculateTotalPrice(List<Orders> orders) {
+	        int totalPrice = 0;
+	        for (Orders order : orders) {
+	            totalPrice += order.getProductPrice() * order.getQuantity();
+	        }
+	        return totalPrice;
+	    }
+}
+
+
+

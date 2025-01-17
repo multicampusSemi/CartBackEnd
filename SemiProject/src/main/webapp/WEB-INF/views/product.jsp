@@ -6,50 +6,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Page</title>
-    <link rel="stylesheet" href="static/ljmcss/product.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/ljmcss/product.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&display=swap" rel="stylesheet">
-    <script src="static/ljmjs/product.js"></script>
+    <script src="/ljmjs/product.js"></script>
 </head>
 <body>
     <div class="product">
-        <div id="headers"></div>
         <div class="product-page">
             <div class="slider">
                 <div class="slides">
-                    <img src="static/images/kpop1.jpeg" alt="Image 1">
-                    <img src="static/images/kpop2.jpeg" alt="Image 2">
-                    <img src="static/images/kpop3.jpeg" alt="Image 3">
+                    <img src="/images/kpop1.jpg" alt="Image 1">
+                    <img src="/images/kpop2.jpg" alt="Image 2">
+                    <img src="/images/kpop3.jpg" alt="Image 3">
                 </div>
             </div>
             <div class="container">
                 <main>
                     <div class="productpage-list">
                         <ul class="products">
-                            <c:forEach var="product" items="${products}">
-                                <li class="product-each">
-                                    <span><img src="${product.imageUrl}" width="250px" height="350px" alt="${product.name}"></span>
-                                    <br/>
-                                    <br/>
-                                    <span class="name">${product.name}</span>
-                                    <br/>
-                                    <span class="price"><span class="pricecolor">${product.price}</span><span class="won">원</span></span>
-                                    <span class="cart">
-                                        <form action="/cart/add" method="post">
-                                            <input type="hidden" name="productId" value="${product.id}">
-                                            <button type="submit"><img src="static/images/cart.jpeg" alt="Add to Cart"></button>
-                                        </form>
-                                    </span>
-                                </li>
-                            </c:forEach>
+                            <c:if test="${not empty products}">
+    <c:forEach var="product" items="${products}">
+        <li class="product-each">
+            <br/>
+            <br/>
+            <span class="name">${product.product_name}</span>
+            <br/>
+            <span class="price"><span class="pricecolor">${product.product_price}</span><span class="won">원</span></span>
+            <span class="cart">
+                <form action="/cart/add" method="post">
+                    <input type="hidden" name="productId" value="${product.product_id}">
+                    <button type="submit"><img src="/images/cart.png" alt="Add to Cart"></button>
+                </form>
+            </span>
+        </li>
+    </c:forEach>
+</c:if>
+<c:if test="${empty products}">
+    <p>No products available.</p>
+</c:if>
                         </ul>
                     </div>
                 </main>
             </div>
         </div>
-        <div id="footers"></div>
     </div>
 </body>
 </html>

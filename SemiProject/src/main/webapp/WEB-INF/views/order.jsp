@@ -6,9 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="static/ljmcss/order.css">
+    <link rel="stylesheet" href="/ljmcss/oreder.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="static/ljmjs/order.js"></script>
+    <script src="/ljmjs/order.js"></script>
 </head>
 
 <body>
@@ -19,7 +19,8 @@
         <c:forEach var="item" items="${orderItems}">
             <div class="order-item">
                 <p>상품명: ${item.productName}</p>
-                <p>가격: ${item.price}</p>
+                <p>가격: ${item.productPrice}</p>
+                <p>배송비:${item.shippingFee}</p>
                 <p>수량: ${item.quantity}</p>
             </div>
         </c:forEach>
@@ -29,7 +30,7 @@
     
     <!-- 가격 표시 -->
     <div id="price">
-        총 가격: ${totalPrice} 원
+        총 가격: ${item.totalAmount} 원
     </div>
     
     <!-- 결제 버튼 -->
@@ -39,3 +40,8 @@
 
 </body>
 </html>
+<script>
+    // orderItems를 JSON 문자열로 변환하여 JavaScript 변수에 할당
+    console.log('${orderItemsJson}'); 
+    const orderItems = JSON.parse('${orderItemsJson}'); // 서버에서 전달된 JSON을 JavaScript로 넘기기
+</script>

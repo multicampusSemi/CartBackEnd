@@ -1,0 +1,32 @@
+package com.project.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import com.project.mapper.LjmSemiMapper;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+public class OrderService {
+	private final LjmSemiMapper orderMapper;
+	
+	public void saveOrder(int userId, List<Map<String, Object>> selectedProducts) {
+		 selectedProducts.forEach(product -> {
+		        // Null 체크 추가
+		        Object productIdObj = product.get("productId");
+		        Object quantityObj = product.get("quantity");
+		        
+		        if (productIdObj != null && quantityObj != null) {
+		            int productId = Integer.parseInt(productIdObj.toString());
+		            int quantity = Integer.parseInt(quantityObj.toString());
+		            int totalAmount = productPrice * quantity; // totalAmount 계산
+		            orderMapper.insertOrder(userId, productId, quantity, totalAmount);
+		        } else {
+		            // 적절한 로깅이나 에러 처리 추가
+		            System.out.println("Product ID or Quantity is null.");
+		        }
+		    });
+}

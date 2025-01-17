@@ -1,0 +1,23 @@
+package com.project.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import com.project.mapper.LjmSemiMapper;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+	private final LjmSemiMapper orderMapper;
+	
+	public void saveOrder(int userId, List<Map<String, Object>> selectedProducts) {
+		selectedProducts.forEach(product -> {
+			int productId = Integer.parseInt(product.get("productId").toString());
+			int quantity = Integer.parseInt(product.get("quantity").toString());
+		})
+	}
+}

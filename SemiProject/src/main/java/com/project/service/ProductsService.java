@@ -15,7 +15,7 @@ public class ProductsService {
         this.productMapper = productMapper;
     }
 
-    public List<Products> getAllProducts() {
-        return productMapper.getAllProducts();
+    public List<Products> showproduct(){
+    	return productMapper.showproduct();
     }
 }
