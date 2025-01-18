@@ -19,15 +19,34 @@
     LIMIT 1;
 	</select>
 	
-	<insert id="insertOrder" parameterType="map">
-    INSERT INTO OrderItem (product_id, quantity)
-    VALUES (#{productId}, #{quantity});
-	</insert>
+	<!-- 개별 주문 항목 삽입 -->
+<insert id="insertOrder" parameterType="map">
+    INSERT INTO OrderItem (order_id, product_id, quantity)
+    VALUES (#{bookingId}, #{productId}, #{quantity});
+</insert>
+
+<!-- 전체 주문 정보 삽입 -->
+<insert id="insertOrderTotal" parameterType="map">
+    INSERT INTO Orders (user_id, total_price, created_at, status, id)
+    VALUES (#{userId}, #{totalPrice}, NOW(), #{status}, #{bookingId});
+</insert>
+
 	
 	<select id="getAllOrders" resultType="com.project.model.OrderItem">
-    SELECT  o.quantity, o.total_price AS totalAmount, p.productName, p.productPrice, p.shippingfee
-    FROM OrderItem o
-    JOIN products p ON o.product_id = p.productId
+    SELECT 
+    o.total_price, 
+    p.productName AS productName, 
+    p.productPrice AS productPrice, 
+    p.shippingfee AS shippingFee,
+    oi.quantity
+	FROM 
+    Orders o
+	JOIN 
+    OrderItem oi ON o.id = oi.order_id
+	JOIN 
+    products p ON oi.product_id = p.productId
+	WHERE 
+    o.id = #{bookingId}
 	</select>
 
 	<select id="showbookingitem" resultMap="bookingListResultMap">
@@ -42,7 +61,18 @@
     JOIN products p ON b.product_id = p.productId
     WHERE b.user_id = 1
 	</select>
-
+	
+	<select id="getBookingIdByUserId" resultType="int">
+    SELECT booking_id 
+    FROM bookinglist 
+    WHERE user_id = 1
+    LIMIT 1
+	</select>
+	
+	<select id="getOrdersByUserId" parameterType="int">
+        SELECT * FROM Orders WHERE user_id = 1
+    </select>
+	
   	<resultMap id="bookingListResultMap" type="com.project.model.BookingList">
         <result property="bookingId" column="bookingId"/>
         <result property="productName" column="productName"/>

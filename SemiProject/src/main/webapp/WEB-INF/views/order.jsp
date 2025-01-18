@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +31,9 @@
     
     <!-- 가격 표시 -->
     <div id="price">
-        총 가격: ${item.totalAmount} 원
+      <p>총 가격: ${totalPrice}원</p>
+        <p>총 배송비: ${totalShippingFee}원</p>
+        <p>총 가격: ${totalAmount} 원</p>
     </div>
     
     <!-- 결제 버튼 -->
@@ -43,8 +45,4 @@
         </div>
 </body>
 </html>
-<script>
-    // orderItems를 JSON 문자열로 변환하여 JavaScript 변수에 할당
-    console.log('${orderItemsJson}'); 
-    const orderItems = JSON.parse('${orderItemsJson}'); // 서버에서 전달된 JSON을 JavaScript로 넘기기
-</script>
+

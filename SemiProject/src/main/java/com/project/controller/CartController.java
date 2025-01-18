@@ -1,6 +1,6 @@
 package com.project.controller;
 
-import java.util.Arrays;  
+import java.util.Arrays;   
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,32 +78,37 @@ public class CartController {
 		 return "redirect:/booking";
 	    }
 	 
+	 
+	 
 	 @PostMapping("/order/create")
 	 public String createOrder(@RequestBody List<OrderItem> selectedProducts, HttpSession session) {
-		 Integer userId = (Integer) session.getAttribute("userId");
-		 if(userId == null) {
-			 return "redirect:/login";
-		 }
-		 
-		 orderService.saveOrder(userId, selectedProducts);
-		 return "redirect:/order";
-	 }
+		    Integer userId = (Integer) session.getAttribute("userId");
+		    if (userId == null) {
+		        return "redirect:/login";
+		    }
+
+		    Integer bookingId = selectedProducts.get(0).getBookingId(); // 예시로 첫 번째 제품의 bookingId 사용
+
+		    orderService.saveOrder(userId, selectedProducts);  // 주문 저장
+
+		    return "redirect:/order";
+		}
+	 
+	 
 	 
 	 @GetMapping("/order")
-	 public String showOrderPage(Model model, HttpSession session) {
-		 Integer userId = (Integer) session.getAttribute("userId");
+	 public String getOrderPage(Model model, HttpSession session) {
+	     Integer userId = (Integer) session.getAttribute("userId");
+	     if (userId == null) {
+	         return "redirect:/login";
+	     }
+	     
+	     List<OrderItem> orderItems = orderService.getOrders(userId);
+	     model.addAttribute("orderItems", orderItems);
 
-		 if (userId == null) {
-		        userId = usersService.getDefaultUserId();; // 기본 사용자 ID 설정
-		        session.setAttribute("userId", userId);
-		    }
-		 List<OrderItem> orders = orderService.getOrders();
-		 model.addAttribute("orderItems", orders);  // 기존대로, JSON 이외의 값도 전달
-		 return "order";
+	     return "order";  // forward로 처리하여 'order.jsp' 파일을 렌더링
 	 }
-	 
-	
-		
-	 
-}
+
+	 }
+
 

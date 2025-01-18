@@ -12,7 +12,7 @@ $.ajax({
 });
 
 function generateProductRows(bookingItems) {
-     console.log("bookginItems:",bookingItems); // 제대로 전달된 배열을 확인
+     console.log("bookingItems:",bookingItems); // 제대로 전달된 배열을 확인
   
     
     const table = document.querySelector('.booking-table tbody');
@@ -25,7 +25,7 @@ function generateProductRows(bookingItems) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td><input type="checkbox" class="select-check" data-id="${item.bookingId}" onchange="updateShippingFee(bookingItems)"/></td>
-            <td><img src="${item.imageUrl}" alt="${item.productName}"/><br/>${item.productName}</td>
+            <td><img src="${item.photo}" alt="${item.productName}"/><br/>${item.productName}</td>
             <td><p>${item.productdescription}</p></td>
             <td>${item.shippingFee}</td>
             <td>
@@ -36,7 +36,7 @@ function generateProductRows(bookingItems) {
                 </div>
                 <p>수량</p>
             </td>
-             <td id="price-${item.bookingId}">${item.productPrice}</td>
+             <td id="price-${item.bookingId}" class="product-price">${item.productPrice}</td>
         `;
 //			 <td id="price-${index}">${parseInt(parseFloat(item.productPrice) * parseInt(item.productCount))}</td>
         table.appendChild(row);
@@ -133,17 +133,16 @@ function allCheck(){
 function order() {
     const selectedProducts = [];
     const rows = document.querySelectorAll('.booking-table tbody tr');
-
     rows.forEach((row) => {
         const checkbox = row.querySelector('.select-check');
         if (checkbox && checkbox.checked) {
             const productId = checkbox.getAttribute('data-id');  // data-id 속성에서 productId 가져오기
             const quantityInput = row.querySelector('input[id^="numberInput"]');
             const quantity = quantityInput ? quantityInput.value : 0;  // 수량 값을 가져오기
-
+			const price = parseInt(row.querySelector('.product-price').textContent,10);  // 상품 가격 가져오기 
             // productId와 quantity가 모두 존재할 때만 선택된 상품 추가
-            if (productId && quantity && quantity > 0) {
-                selectedProducts.push({ productId: productId, quantity: quantity });
+            if (productId && quantity && quantity > 0 && price) {
+                selectedProducts.push({ productId: productId, quantity: quantity, productPrice: price});
             }
         }
     });
