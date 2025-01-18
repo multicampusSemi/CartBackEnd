@@ -1,27 +1,38 @@
+let bookingItems = [];
+$.ajax({
+    url: '/getBookingItems',  
+    type: 'GET',
+    success: function(data) {
+        generateProductRows(data);
+		bookingItems = data;
+    },
+    error: function(error) {
+        console.error('데이터를 받아오는 데 실패했습니다:', error);
+    }
+});
 
-
-
-function generateProductRows(cartItems) {
-     console.log(cartItems); // 제대로 전달된 배열을 확인
+function generateProductRows(bookingItems) {
+     console.log("bookginItems:",bookingItems); // 제대로 전달된 배열을 확인
   
     
     const table = document.querySelector('.booking-table tbody');
-     if (!cartItems || cartItems.length === 0) {
-        console.error('No cart items to display');
-        return;  // cartItems가 비어있다면 함수 종료
+     if (!bookingItems || bookingItems.length === 0) {
+        console.error('아무것도 없음');
+        return; 
     }
-    cartItems.forEach((item, index) => {
+
+    bookingItems.forEach((item, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td><input type="checkbox" class="select-check" data-id="${item.productId}" onchange="updateShippingFee()"/></td>
+            <td><input type="checkbox" class="select-check" data-id="${item.bookingId}" onchange="updateShippingFee(bookingItems)"/></td>
             <td><img src="${item.imageUrl}" alt="${item.productName}"/><br/>${item.productName}</td>
             <td><p>${item.productdescription}</p></td>
             <td>${item.shippingFee}</td>
             <td>
                 <div class="count">
-                    <button onclick="decrease(${index})">-</button>
+                    <button   onclick="decrease(${index})">-</button>
                     <input type="text" id="numberInput${index}" value="${item.productCount}" onchange="updateShippingFee()" min="0"/>
-                    <button onclick="increase(${index})">+</button>
+                    <button   onclick="increase(${index})">+</button>
                 </div>
                 <p>수량</p>
             </td>
@@ -30,25 +41,61 @@ function generateProductRows(cartItems) {
 //			 <td id="price-${index}">${parseInt(parseFloat(item.productPrice) * parseInt(item.productCount))}</td>
         table.appendChild(row);
     });
-    updateShippingFee();  // 렌더링 후, 초기 가격/배송비 계산
+    
+    updateShippingFee(bookingItems);  // 렌더링 후, 초기 가격/배송비 계산
+}
+
+
+function increase(index) {
+    var input = document.querySelector("#numberInput" + index);
+    var currentValue = parseInt(input.value);
+    input.value = currentValue + 1;
+
+    // cartItems 배열 업데이트 (수량 변경)
+
+    updateShippingFee(bookingItems); // 배송비 및 가격 계산
+}
+
+function decrease(index) {
+    var input = document.querySelector("#numberInput" + index);
+    var currentValue = parseInt(input.value);
+    if (currentValue > 0) {
+        input.value = currentValue - 1;
+
+        // cartItems 배열 업데이트 (수량 변경)
+
+        updateShippingFee(bookingItems); // 배송비 및 가격 계산
+    } else {
+        alert("수량은 0보다 적을 수 없습니다.");
+    }
 }
 
 
 
-function updateShippingFee() {
+function updateShippingFee(bookingItems) {
+	if (!bookingItems || bookingItems.length === 0) {
+        console.error('bookingItems가 비어 있습니다.');
+        return;  
+    }
+
     let totalShippingFee = 0;
     let totalPrice = 0;
-
     const checkboxes = document.querySelectorAll('.select-check');
     checkboxes.forEach(function (checkbox, index) {
         if (checkbox.checked) {
-            const quantity = parseInt(document.getElementById(`numberInput${index}`).value);
-            const shippingFee = parseFloat(cartItems[index].shippingFee);  // 배송비
-            const price = parseFloat(cartItems[index].productPrice);  // 가격
-
-            if (quantity > 0) {
-                totalShippingFee += shippingFee;
-                totalPrice += price * quantity;
+			 if (index < bookingItems.length) {  // 배열 범위 확인
+                const item = bookingItems[index];
+                
+                const quantity = parseInt(document.getElementById(`numberInput${index}`).value);  // .value 추가
+                const shippingFee = parseFloat(item.shippingFee);
+                const price = parseFloat(item.productPrice);
+				
+                if (quantity > 0) {
+                    totalShippingFee += shippingFee;
+                    totalPrice += price * quantity;
+                }
+            } else {
+                console.error(`인덱스 ${index}가 bookingItems 범위를 초과했습니다.`);
             }
         }
     });
@@ -57,13 +104,13 @@ function updateShippingFee() {
     document.querySelector('.allprice').textContent = `배송비 ${totalShippingFee} + 가격 ${totalPrice} = ${totalAmount}원`;
 }
 
-function calculateTotalPrice() {
+function calculateTotalPrice(bookingItems) {
     let totalPrice = 0;
     const checkboxes = document.querySelectorAll('.select-check');
     checkboxes.forEach(function(checkbox, index) {
         if (checkbox.checked) {
             const quantity = document.getElementById(`numberInput${index}`).value;
-            const price = products[index].price;
+            const price = bookingItems[index].productPrice;
             totalPrice += price * quantity;
         }
     });
@@ -72,24 +119,6 @@ function calculateTotalPrice() {
 
 
 
-
-function increase(index){
-    var input = document.getElementById("numberInput" + index);
-    var currentValue = parseInt(input.value);
-    input.value = currentValue + 1;
-    updateShippingFee();
-}
-
-function decrease(index){
-    var input = document.getElementById("numberInput" + index);
-    var currentValue = parseInt(input.value);
-    if(currentValue > 0){
-        input.value = currentValue - 1;
-	    updateShippingFee();
-    }else{
-        alert("0보다 작을 수 없습니다.")
-    }
-}
 
 
 function allCheck(){
@@ -108,9 +137,12 @@ function order() {
     rows.forEach((row) => {
         const checkbox = row.querySelector('.select-check');
         if (checkbox && checkbox.checked) {
-            const productId = checkbox.getAttribute('data-id');
-            const quantity = row.querySelector('input[id^="numberInput"]').value;
-            if (productId && quantity) {
+            const productId = checkbox.getAttribute('data-id');  // data-id 속성에서 productId 가져오기
+            const quantityInput = row.querySelector('input[id^="numberInput"]');
+            const quantity = quantityInput ? quantityInput.value : 0;  // 수량 값을 가져오기
+
+            // productId와 quantity가 모두 존재할 때만 선택된 상품 추가
+            if (productId && quantity && quantity > 0) {
                 selectedProducts.push({ productId: productId, quantity: quantity });
             }
         }
@@ -120,13 +152,13 @@ function order() {
             url: '/order/create',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify(selectedProducts),
+            data: JSON.stringify(selectedProducts),  // 선택된 상품을 JSON 형식으로 전송
             success: function () {
                 alert('주문이 완료되었습니다.');
-                window.location.href = '/order';
+                window.location.href = '/order';  // 주문 완료 후 리디렉션
             },
             error: function () {
-                alert('주문에 실패했습니다.');
+                alert('주문에 실패했습니다. 다시 시도해 주세요.');
             }
         });
     } else {
@@ -146,29 +178,29 @@ function deleteSelected() {
 //         if (productId) {  // productId가 NaN이 아니고 유효한 값인지 체크
 //        selectedIds.push(productId);
 //    }
+
+
 checkboxes.forEach(function (checkbox) {
-    const productId = checkbox.getAttribute('data-id');
-    console.log('data-id:', productId);  // data-id가 제대로 출력되는지 확인
-    if (productId) {
-        const parsedProductId = parseInt(productId, 10);
-        console.log('parsedProductId:', parsedProductId);  // parseInt 후 값 확인
-        if (!isNaN(parsedProductId)) {
-            selectedIds.push(parsedProductId);
+    const bookingId = checkbox.getAttribute('data-id');
+    console.log('data-id:', bookingId);  // data-id가 제대로 출력되는지 확인
+    if (bookingId) {
+        const parsedBookingId = parseInt(bookingId, 10);
+        console.log('parsedbookingId:', parsedBookingId);  // parseInt 후 값 확인
+        if (!isNaN(parsedBookingId)) {
+            selectedIds.push(parsedBookingId);
         } else {
-            console.error('Invalid productId:', productId);  // 유효하지 않으면 에러 메시지 출력
+            console.error('Invalid bookingId:', bookingId);  // 유효하지 않으면 에러 메시지 출력
         }
     } else {
         console.error('data-id is null or undefined');
     }
-
-
 });
 
     if (selectedIds.length > 0) {
         $.ajax({
             url: '/cart/delete',
             type: 'POST',
-            data: { productIds: selectedIds.join(',') },  // JSON이 아닌 URL 파라미터로 전달
+            data: { bookingIds: selectedIds.join(',') },  // JSON이 아닌 URL 파라미터로 전달
             success: function () {
                 checkboxes.forEach(function (checkbox) {
                     const row = checkbox.closest('tr');
@@ -185,4 +217,4 @@ checkboxes.forEach(function (checkbox) {
     } else {
         alert('삭제할 상품을 선택하세요.');
     }
-}
+   }

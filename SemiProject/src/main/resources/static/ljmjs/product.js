@@ -1,29 +1,43 @@
-$(document).ready(function() {
-    $('#headers').load('header.html');  // header.html 파일의 내용을 #header div에 로드
-    $('#footers').load('footer.html');  // footer.html 파일의 내용을 #footer div에 로드
-});
+
+
 //slider
-const slides = document.querySelector('.slides');
+document.addEventListener("DOMContentLoaded", function() {
+    const slides = document.querySelector('.slides');
+
+    // 슬라이드 요소가 존재하는지 확인
+    if (!slides) {
+        console.error("슬라이드 요소를 찾을 수 없습니다.");
+        return;
+    }
+
     const slideCount = slides.children.length;
     let currentIndex = 0;
 
+    // 슬라이드의 위치를 업데이트하는 함수
     const updateSlidePosition = () => {
-      const slideWidth = slides.children[0].clientWidth;
-      slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+        const slideWidth = slides.children[0].clientWidth;
+        slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
     };
 
+    // 다음 슬라이드를 표시하는 함수
     const showNextSlide = () => {
-      currentIndex = (currentIndex + 1) % slideCount;
-      updateSlidePosition();
+        currentIndex = (currentIndex + 1) % slideCount;
+        updateSlidePosition();
     };
 
+    // 이전 슬라이드를 표시하는 함수
     const showPrevSlide = () => {
-      currentIndex = (currentIndex - 1 + slideCount) % slideCount;
-      updateSlidePosition();
+        currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+        updateSlidePosition();
     };
 
-    // 자동 슬라이드 (5초 간격)
+    // 자동 슬라이드 (7초 간격)
     setInterval(showNextSlide, 7000);
+
+    // 슬라이드의 크기가 변경될 때마다 슬라이드 위치를 업데이트하는 리스너 추가
+    window.addEventListener('resize', updateSlidePosition);
+});
+
 
     //페이징 처리
 let nowPage = 1;
@@ -76,36 +90,24 @@ function loadItem(findStr,nowPage){
 }
 
 //장바구니
-function addcart(productId, productCount) {
-    // 모든 .cart 버튼에 대해 클릭 이벤트 리스너를 추가
-    document.querySelectorAll('.cart button').forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.preventDefault();  // 기본 폼 제출을 방지
-            
-            // 해당 버튼의 부모 form을 선택하여 FormData 생성
-            var form = this.closest('form');  // 이 버튼에 해당하는 form을 찾음
-            var formData = new FormData(form);  // 해당 form의 데이터를 가져옴
-
-            // 제품 ID와 수량을 추가 (넘겨받은 productId와 productCount 사용)
-            formData.set('productId', productId);
-            formData.set('productCount', productCount);
-
-            // Ajax 요청 보내기
-            $.ajax({
-                url: "/cart/add",
-                type: 'POST',
-                contentType: false,
-                processData: false,
-                data: formData,
-                success: function(response) {
-                    alert("상품이 장바구니에 담겼습니다.");
-                    productSearch();  // 상품 검색 함수 호출 (필요하다면 구현)
-                },
-                error: function() {
-                    alert("장바구니 추가 실패");
-                }
-            });
-        });
+function cart(){
+    const sessionId=/*[[${session.getId()}]]*/'';
+    document.getElementsByClassName('cart').addEventListener('click', function() {
+        console.log("바보");
+        var formData = new FormData(document.getElementsByClassName('.product-each'));
+        formData.set('sessionId',sessionId);
+        $.ajax ({
+            url : "/submit",
+            type: 'POST',
+            contentType:false,
+            processData:false,
+            data: formData,
+            success: (resp) => {
+                alert("상품이 장바구니에 담겼습니다.");
+                // $(".stockitems").reload();
+                productSearch();
+            }
+        })
     });
 }
 

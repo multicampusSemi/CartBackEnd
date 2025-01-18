@@ -13,14 +13,16 @@ public class CartService {
 	public CartService(LjmSemiMapper cartMapper) {
         this.cartMapper = cartMapper;
     }
-	public List<BookingList> showbookingitem(int userId){
-		return cartMapper.showbookingitem(userId);
+	public List<BookingList> showbookingItem(int userId){
+		List<BookingList> bookingItems = cartMapper.showbookingitem(userId);
+		System.out.print(bookingItems);
+		return bookingItems;
 	}
 	
 	
-	 public void removeProductsFromCart(int userId, List<Integer> productIds) {
-		 System.out.println("Removing products for user: " + userId + " with IDs: " + productIds);  // 로그 확인
-		    int rowsDeleted = cartMapper.deleteProductsFromCart(userId, productIds);
+	 public void removeProductsFromCart(int userId, List<Integer> bookingIds) {
+		 System.out.println("Removing products for user: " + userId + " with IDs: " + bookingIds);  // 로그 확인
+		    int rowsDeleted = cartMapper.deleteProductsFromCart(userId, bookingIds);
 	 }
 }
 

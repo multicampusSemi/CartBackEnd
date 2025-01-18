@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>장바구니</title>
     <link rel="stylesheet" href="/ljmcss/booking.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/ljmjs/booking.js"></script>
+   
+
 </head>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/ljmjs/booking.js"></script>
 <body>
+<%@ include file="/WEB-INF/views/krhheader.jsp" %>
     <div class="booking">
         <h2>Cart</h2>
         <br/>
@@ -23,24 +26,9 @@
                 <th>수량</th>
                 <th>가격</th>
             </tr>
+         
             <tbody>
-            <c:forEach var="item" items="${cartItems}">
-                <tr>
-                    <td><input type="checkbox" class="select-check" data-id="${item.productId}" onchange="updateShippingFee()"/></td>
-                    <td>${item.productName}</td>
-                    <td>${item.productdescription}</td>
-                    <td>${item.shippingFee}</td>
-                    <td>
-                        <div class="count">
-                            <button onclick="decrease(${item.bookingId})">-</button>
-                            <input type="text" id="numberInput${item.bookingId}" value="${item.productCount}" onchange="updateShippingFee()" min="0"/>
-                            <button onclick="increase(${item.bookingId})">+</button>
-                        </div>
-                    </td>
-                    <td id="price-${item.bookingId}">${item.productPrice}</td>
-                </tr>
-            </c:forEach>
-            </tbody>
+       
         </table>
 
         <div class="allprice" colspan="6">
@@ -54,12 +42,11 @@
         <button class="orderbtn" id="order" type="submit" onclick="order()">주문하러가기</button>
         <button class="orderbtn" id="delete" onclick="deleteSelected()">선택 삭제</button>
     </div>
+    <div id="footers">
+        <%@ include file="/WEB-INF/views/krhfooter.jsp" %>
+        </div>
 </body>
 </html>
-<script>
-    // JSP에서 전달된 cartItemsJson을 JavaScript 객체로 변환
-    const cartItems = JSON.parse('${cartItemsJson}');
-    console.log(cartItems);  // 확인: 배열이 제대로 출력되는지 확인
-     generateProductRows(cartItems);
-</script>
+
+
 
