@@ -14,6 +14,7 @@ public class OrderItem {
     private int userId;
     private String status;
     
+    
     public String getProductName() {
         return productName;
     }
@@ -21,20 +22,21 @@ public class OrderItem {
     public void setProductName(String productName) {
         this.productName = productName;
     }
-    
-    public int getshippingFee() {
-    	return shippingFee;
+    public int getShippingFee() {
+        return this.shippingFee;
     }
-    
-    public void setshippingFee() {
-    	this.shippingFee = shippingFee;
+
+    // shippingFee를 설정하는 setter
+    public void setShippingFee(int shippingFee) {
+        this.shippingFee = shippingFee;
     }
-    
+
+    // 총 금액 계산을 위한 getter
     public int getTotalAmount() {
         return totalAmount;
     }
 
     public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;  // 값 설정
+        this.totalAmount = totalAmount;  // 총 금액 설정
     }
 }

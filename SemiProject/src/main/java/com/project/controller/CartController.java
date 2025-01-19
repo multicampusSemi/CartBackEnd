@@ -104,7 +104,23 @@ public class CartController {
 	     }
 	     
 	     List<OrderItem> orderItems = orderService.getOrders(userId);
+	     int totalPrice = 0;
+	     int totalShippingFee = 0;
+	     
+	     for (OrderItem item : orderItems) {
+	         totalPrice += item.getProductPrice() * item.getQuantity();  // 가격 * 수량
+	         totalShippingFee += item.getShippingFee();  // 배송비 합산
+	     }
+	     
+	     // 총 결제 금액 계산
+	     int totalAmount = totalPrice + totalShippingFee;
+
+	     // 모델에 추가
 	     model.addAttribute("orderItems", orderItems);
+	     model.addAttribute("totalPrice", totalPrice);
+	     model.addAttribute("totalShippingFee", totalShippingFee);
+	     model.addAttribute("totalAmount", totalAmount);
+
 
 	     return "order";  // forward로 처리하여 'order.jsp' 파일을 렌더링
 	 }

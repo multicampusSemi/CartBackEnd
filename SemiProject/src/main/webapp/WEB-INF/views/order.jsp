@@ -5,12 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>주문 페이지</title>
     <link rel="stylesheet" href="/ljmcss/oreder.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/ljmjs/order.js"></script>
 </head>
 
+    
 <body>
 <%@ include file="/WEB-INF/views/krhheader.jsp" %>
     <h2>Order</h2>
@@ -18,7 +17,7 @@
     <div id="orderlist">
         <!-- JSTL 반복문을 사용하여 orderItems를 동적으로 출력 -->
         <c:forEach var="item" items="${orderItems}">
-            <div class="order-item">
+            <div class="order-item-main">
                 <p>상품명: ${item.productName}</p>
                 <p>가격: ${item.productPrice}</p>
                 <p>배송비:${item.shippingFee}</p>
@@ -30,7 +29,7 @@
     <br>
     
     <!-- 가격 표시 -->
-    <div id="price">
+    <div id="price" class="price">
       <p>총 가격: ${totalPrice}원</p>
         <p>총 배송비: ${totalShippingFee}원</p>
         <p>총 가격: ${totalAmount} 원</p>
@@ -43,6 +42,8 @@
 <div id="footers">
         <%@ include file="/WEB-INF/views/krhfooter.jsp" %>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/ljmjs/order.js"></script>
 </body>
 </html>
 
